@@ -18,3 +18,30 @@ async def  test_get_documents ():
         response = await ac.get("/documents/")
     assert response.status_code == 200
     assert isinstance (response.json(), list)
+
+async def test_create_document():
+    """Тест успешного создания документа."""
+    payload = {
+        "title": "Название тестового документа", 
+        "content": "Содержимое тестового документа" 
+    }
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test/") as ac:
+        response = await ac.post("/documents/", json = payload)
+    assert response.status_code == 201
+    data = response.json()
+    assert payload["title"] == data["title"]
+    assert data ["status"] == "pending"
+    assert "id" in data
+
+async def test_create_error_document():
+    """Тест ошибок создания документа."""
+    payload = {
+        "title": "12", 
+        "content": "12345" 
+    }
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test/") as ac:
+        response = await ac.post("/documents/", json = payload)
+    assert response.status_code == 422
+
+
+    
