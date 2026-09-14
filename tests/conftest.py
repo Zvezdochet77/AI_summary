@@ -1,6 +1,12 @@
 import os
-os.environ["DATABASE_URL"] = "postgresql+asyncpg://postgres:postgres@db:5432/summarizer_db"
-os.environ["RABBITMQ_URL"] = "amqp://guest:guest@localhost:5672/" 
+os.environ["DATABASE_URL"] = os.getenv(
+    "DATABASE_URL", 
+    "postgresql+asyncpg://postgres:postgres@localhost:5432/summarizer_test_db"
+)
+os.environ["RABBITMQ_URL"] = os.getenv(
+    "RABBITMQ_URL", 
+    "amqp://guest:guest@localhost:5672/"
+) 
 
 import sys
 from pathlib import Path
